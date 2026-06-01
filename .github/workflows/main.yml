@@ -12,7 +12,9 @@ jobs:
       - run: pwd
 
       - run: ls
-      - run: find . -type d |sort 
+
+      - run: git clone https://github.com/accellera-official/uvm-core.git
+
       - run: |
           unset VERILATOR_ROOT
           verilator --binary --sv \
