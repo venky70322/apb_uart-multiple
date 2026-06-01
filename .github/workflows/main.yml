@@ -7,5 +7,13 @@ jobs:
       - uses: actions/checkout@v4
       - run: pwd
       - run: ls
-      - run: unset VERILATOR_ROOT && verilator --binary --sv \--vpi \--top-module tb \-CFLAGS "-DVERILATOR" \-I../uvm-core/src ../uvm-core/src/uvm_pkg.sv ../uvm-core/src/dpi/uvm_dpi.cc ../uvm-core/src/dpi/uvm_regex.cc -f flist.f
+      - run: unset VERILATOR_ROOT && verilator --binary --sv \
+        --vpi \
+        --top-module tb \
+        -CFLAGS "-DVERILATOR" \
+        -I../uvm-core/src \
+        ../uvm-core/src/uvm_pkg.sv \
+        ../uvm-core/src/dpi/uvm_dpi.cc \
+        ../uvm-core/src/dpi/uvm_regex.cc \
+        -f flist.f
       - run: ./obj_dir/Vtb
