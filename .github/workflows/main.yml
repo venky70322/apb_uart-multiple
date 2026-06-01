@@ -16,6 +16,41 @@ jobs:
       - run: git clone https://github.com/accellera-official/uvm-core.git
 
       - run: |
+          sed -i '43i\
+#ifdef VERILATOR\
+#include "uvm_hdl_verilator.c"\
+#else' uvm-core/src/dpi/uvm_hdl.c
+
+      - run: |
+          sed -i '47i\
+#endif' uvm-core/src/dpi/uvm_hdl.c
+
+      - run: |
+          cat > uvm-core/src/dpi/uvm_hdl_verilator.c <<EOF
+          #include <stdio.h>
+
+          int uvm_hdl_check_path(char *path)
+          {
+              return 1;
+          }
+
+          int uvm_hdl_read(char *path, p_vpi_vecval value)
+          {
+              return 1;
+          }
+
+          int uvm_hdl_deposit(char *path, p_vpi_vecval value)
+          {
+              return 1;
+          }
+
+          int uvm_hdl_release(char *path)
+          {
+              return 1;
+          }
+          EOF
+
+      - run: |
           unset VERILATOR_ROOT
           verilator --binary --sv \
           --vpi \
