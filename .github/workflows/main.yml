@@ -16,14 +16,25 @@ jobs:
       - run: git clone https://github.com/accellera-official/uvm-core.git
 
       - run: |
-          sed -i '43i\
-#ifdef VERILATOR\
-#include "uvm_hdl_verilator.c"\
-#else' uvm-core/src/dpi/uvm_hdl.c
+          python3 - <<EOF
+          path = "uvm-core/src/dpi/uvm_hdl.c"
 
-      - run: |
-          sed -i '47i\
-#endif' uvm-core/src/dpi/uvm_hdl.c
+          with open(path, "r") as f:
+              data = f.read()
+
+          old = '#error "hdl vendor backend is missing"'
+
+          new = '''#ifdef VERILATOR
+#include "uvm_hdl_verilator.c"
+#else
+#error "hdl vendor backend is missing"
+#endif'''
+
+          data = data.replace(old, new)
+
+          with open(path, "w") as f:
+              f.write(data)
+          EOF
 
       - run: |
           cat > uvm-core/src/dpi/uvm_hdl_verilator.c <<EOF
